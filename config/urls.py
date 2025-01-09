@@ -15,10 +15,26 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from core import views
+from core.plugins import plugin_manager
+
+# 創建插件 URL patterns
+def get_plugin_urls():
+    """動態生成插件的 URL patterns"""
+    server_logs = plugin_manager.get_plugin('server_logs')
+    if server_logs:
+        return [
+            path('logs/', include(([
+                path('', views.plugin_management, name='logs'),
+                path('<str:log_type>/', views.plugin_management, name='view_logs'),
+                path('<str:log_type>/api/', server_logs.get_logs_api, name='get_logs'),
+                path('message/add/', server_logs.add_message, name='add_log_message'),
+            ], 'server_logs'))),
+        ]
+    return []
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +49,8 @@ urlpatterns = [
     path('management/product/<int:product_id>/delete/', views.delete_product, name='delete_product'),
     path('product/<int:product_id>/', views.product_detail, name='product_detail'),
     path('management/plugins/', views.plugin_management, name='plugin_management'),
+    
+    # 插件 URLs
+    path('plugins/', include((get_plugin_urls(), 'plugins'), namespace='plugins')),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -114,16 +114,17 @@ def plugin_management(request):
         elif action == 'disable':
             plugin_manager.disable_plugin(plugin_name)
     
-    # 獲取插件信息並處理描述
-    plugins = []
-    for name, plugin, enabled in plugin_manager.get_all_plugins():
-        plugins.append({
-            'name': name,
-            'plugin': plugin,
-            'enabled': enabled,
-            'description': plugin.__doc__ or "No description available"
-        })
+    # 獲取插件信息
+    plugins = plugin_manager.get_all_plugins()
+    
+    # 讀取插件日誌
+    try:
+        with open('plugin.log', 'r') as f:
+            plugin_logs = f.readlines()[-50:]  # 只顯示最後50行
+    except FileNotFoundError:
+        plugin_logs = ['No plugin logs found']
     
     return render(request, 'admin/plugin_management.html', {
-        'plugins': plugins
+        'plugins': plugins,
+        'plugin_logs': plugin_logs
     })

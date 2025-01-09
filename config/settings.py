@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'core.middleware.UserActivityMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -56,7 +57,10 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [
+            BASE_DIR / 'templates',
+            BASE_DIR / 'plugins',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -136,19 +140,49 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname}: {message}',
+            'style': '{',
+            'datefmt': '%d/%b/%Y %H:%M:%S'
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
         },
-        'file': {
+        'plugin_file': {
             'class': 'logging.FileHandler',
             'filename': 'plugin.log',
+            'formatter': 'verbose',
+        },
+        'server_file': {
+            'class': 'logging.FileHandler',
+            'filename': 'server.log',
+            'formatter': 'verbose',
+        },
+        'activity_file': {
+            'class': 'logging.FileHandler',
+            'filename': 'activity.log',
+            'formatter': 'verbose',
         },
     },
     'loggers': {
-        'core.plugins': {
-            'handlers': ['console', 'file'],
+        'django': {
+            'handlers': ['console', 'server_file'],
             'level': 'INFO',
+            'propagate': True,
+        },
+        'core.plugins': {
+            'handlers': ['console', 'plugin_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'user.activity': {
+            'handlers': ['console', 'activity_file'],
+            'level': 'INFO',
+            'propagate': False,
         },
     },
 }

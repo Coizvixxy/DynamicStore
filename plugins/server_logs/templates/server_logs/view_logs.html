@@ -1,0 +1,315 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ log_types|get_item:log_type }} - DynamicStore{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>System Logs</h2>
+        </div>
+        <div class="col text-end">
+            <div class="btn-group me-2">
+                {% for type, name in log_types.items %}
+                <a href="{% url 'plugins:view_logs' type %}" 
+                   class="btn btn-outline-primary {% if log_type == type %}active{% endif %}">
+                    <i class="bi bi-{% if type == 'server' %}server{% elif type == 'activity' %}person-lines-fill{% elif type == 'terminal' %}terminal{% else %}chat-square-text{% endif %}"></i>
+                    {{ name }}
+                </a>
+                {% endfor %}
+            </div>
+            <button id="refreshBtn" class="btn btn-primary me-2">
+                <i class="bi bi-arrow-clockwise"></i> Refresh
+            </button>
+            <div class="btn-group">
+                <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                    Log Level
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item active" href="#" data-level="ALL">All</a></li>
+                    <li><a class="dropdown-item" href="#" data-level="DEBUG">Debug</a></li>
+                    <li><a class="dropdown-item" href="#" data-level="INFO">Info</a></li>
+                    <li><a class="dropdown-item" href="#" data-level="WARNING">Warning</a></li>
+                    <li><a class="dropdown-item" href="#" data-level="ERROR">Error</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <span class="me-3">{{ log_types|get_item:log_type }}</span>
+                <div class="btn-group me-2">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="switchView('logs')">
+                        <i class="bi bi-list"></i> Logs
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="switchView('status')">
+                        <i class="bi bi-graph-up"></i> Server Status
+                    </button>
+                </div>
+                {% if log_type == 'messages' %}
+                <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#addMessageModal">
+                    <i class="bi bi-plus-circle"></i> Add Message
+                </button>
+                {% endif %}
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="autoRefreshSwitch" checked>
+                <label class="form-check-label" for="autoRefreshSwitch">Auto Refresh</label>
+            </div>
+        </div>
+        <div class="card-body">
+            <div id="logsView" class="bg-dark text-light p-3" style="height: 600px; overflow-y: auto; font-family: monospace;">
+                <div id="logContent"></div>
+            </div>
+            <div id="statusView" class="d-none">
+                <div class="row" id="serverStats">
+                    <!-- 服務器統計信息將在這裡動態添加 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Message Modal -->
+{% if log_type == 'messages' %}
+<div class="modal fade" id="addMessageModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add System Message</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="messageForm">
+                    <div class="mb-3">
+                        <label class="form-label">Message Level</label>
+                        <select class="form-select" name="level" required>
+                            <option value="INFO">Info</option>
+                            <option value="WARNING">Warning</option>
+                            <option value="ERROR">Error</option>
+                            <option value="DEBUG">Debug</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-control" name="message" rows="3" required></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="addMessageBtn">Add Message</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let currentFilter = 'ALL';
+let autoRefresh = null;
+const logType = '{{ log_type }}';
+const apiUrl = '{% url "plugins:get_logs" log_type %}';
+const messageUrl = '{% url "plugins:add_log_message" %}';
+
+function getLogs() {
+    fetch(`${apiUrl}?lines=100`)
+        .then(response => response.json())
+        .then(data => {
+            const logContent = document.getElementById('logContent');
+            logContent.innerHTML = '';
+            
+            data.logs.forEach(log => {
+                if (currentFilter === 'ALL' || log.level === currentFilter) {
+                    const logEntry = document.createElement('div');
+                    logEntry.className = `log-entry log-${log.level.toLowerCase()} mb-1`;
+                    
+                    // 根據日誌級別添加不同的樣式
+                    let message = log.message;
+                    if (log.level === 'WARNING') {
+                        message = `<span class="text-warning">[!] ${message}</span>`;
+                    } else if (log.level === 'ERROR') {
+                        message = `<span class="text-danger">[!!!] ${message}</span>`;
+                    }
+                    
+                    logEntry.innerHTML = `
+                        <span class="text-muted">[${log.timestamp}]</span>
+                        <span class="text-${getLevelColor(log.level)}">[${log.level}]</span>
+                        <span>${message}</span>
+                    `;
+                    logContent.appendChild(logEntry);
+                }
+            });
+            
+            if (document.getElementById('autoScrollSwitch').checked) {
+                const logViewer = document.getElementById('logViewer');
+                logViewer.scrollTop = logViewer.scrollHeight;
+            }
+        });
+}
+
+function getLevelColor(level) {
+    switch(level.toUpperCase()) {
+        case 'DEBUG': return 'info';
+        case 'INFO': return 'success';
+        case 'WARNING': return 'warning';
+        case 'ERROR': return 'danger';
+        default: return 'light';
+    }
+}
+
+function toggleAutoRefresh(enabled) {
+    if (enabled) {
+        autoRefresh = setInterval(() => {
+            if (!document.getElementById('logsView').classList.contains('d-none')) {
+                getLogs();
+            } else {
+                updateServerStatus();
+            }
+        }, 5000);
+    } else {
+        clearInterval(autoRefresh);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    getLogs();
+    toggleAutoRefresh(true);
+    
+    document.getElementById('refreshBtn').addEventListener('click', getLogs);
+    
+    document.getElementById('autoRefreshSwitch').addEventListener('change', function() {
+        toggleAutoRefresh(this.checked);
+    });
+    
+    document.querySelectorAll('[data-level]').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentFilter = this.dataset.level;
+            
+            document.querySelectorAll('[data-level]').forEach(el => {
+                el.classList.remove('active');
+            });
+            this.classList.add('active');
+            
+            getLogs();
+        });
+    });
+    
+    // 添加消息功能
+    const addMessageBtn = document.getElementById('addMessageBtn');
+    if (addMessageBtn) {
+        addMessageBtn.addEventListener('click', function() {
+            const form = document.getElementById('messageForm');
+            const formData = new FormData(form);
+            
+            fetch(messageUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('addMessageModal'));
+                    modal.hide();
+                    form.reset();
+                    getLogs();
+                }
+            });
+        });
+    }
+});
+
+function switchView(view) {
+    const logsView = document.getElementById('logsView');
+    const statusView = document.getElementById('statusView');
+    
+    if (view === 'logs') {
+        logsView.classList.remove('d-none');
+        statusView.classList.add('d-none');
+    } else {
+        logsView.classList.add('d-none');
+        statusView.classList.remove('d-none');
+        updateServerStatus();
+    }
+}
+
+function updateServerStatus() {
+    const statsContainer = document.getElementById('serverStats');
+    
+    // 清除現有內容
+    statsContainer.innerHTML = '';
+    
+    // 獲取服務器統計信息
+    fetch('{% url "get_logs" "django" %}')
+        .then(response => response.json())
+        .then(data => {
+            data.logs.forEach(log => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4 mb-3';
+                
+                const card = document.createElement('div');
+                card.className = 'card h-100';
+                
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body';
+                
+                const content = document.createElement('div');
+                content.innerHTML = `
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        ${log.message.split(':')[0]}
+                    </h6>
+                    <p class="card-text">
+                        ${log.message.split(':')[1] || ''}
+                    </p>
+                `;
+                
+                cardBody.appendChild(content);
+                card.appendChild(cardBody);
+                col.appendChild(card);
+                statsContainer.appendChild(col);
+            });
+        });
+}
+</script>
+
+<style>
+.log-entry {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.log-warning {
+    border-left: 3px solid #ffc107;
+    padding-left: 5px;
+}
+
+.log-error {
+    border-left: 3px solid #dc3545;
+    padding-left: 5px;
+}
+
+.card-subtitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+#serverStats .card {
+    background-color: #f8f9fa;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#serverStats .card:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+}
+</style>
+{% endblock %} 

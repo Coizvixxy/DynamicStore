@@ -1,0 +1,141 @@
+Successfully loaded plugin: Product Reviews v1.0.0
+Successfully loaded plugin: Advanced Search v1.0.0
+Loaded 2 plugins
+Disabled plugin: product_reviews
+Enabled plugin: product_reviews
+[09/Jan/2025 06:54:54] INFO: Successfully loaded plugin: Product Reviews v1.0.0
+[09/Jan/2025 06:54:54] INFO: Successfully loaded plugin: Server Logs v1.0.0
+[09/Jan/2025 06:54:54] INFO: Successfully loaded plugin: Advanced Search v1.0.0
+[09/Jan/2025 06:54:54] INFO: Loaded 3 plugins
+[09/Jan/2025 07:15:54] INFO: Successfully loaded plugin: Product Reviews v1.0.0
+[09/Jan/2025 07:15:54] INFO: Successfully loaded plugin: Server Logs v1.0.0
+[09/Jan/2025 07:15:54] INFO: Successfully loaded plugin: Advanced Search v1.0.0
+[09/Jan/2025 07:15:54] INFO: Loaded 3 plugins
+[09/Jan/2025 07:17:42] INFO: Plugin manager initialized
+[09/Jan/2025 07:17:42] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:17:42] INFO: Successfully loaded plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:17:42] INFO: Successfully loaded plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:17:42] INFO: Successfully loaded plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:17:42] INFO: Plugin discovery completed. Loaded 3 plugins.
+[09/Jan/2025 07:17:42] INFO: Added URLs from plugin product_reviews: [<django.urls.resolvers.RoutePattern object at 0x103143e50>, <django.urls.resolvers.RoutePattern object at 0x103148150>]
+[09/Jan/2025 07:17:42] INFO: Added URLs from plugin server_logs: [<django.urls.resolvers.RoutePattern object at 0x1031483d0>, <django.urls.resolvers.RoutePattern object at 0x103148690>, <django.urls.resolvers.RoutePattern object at 0x103148950>]
+[09/Jan/2025 07:17:42] INFO: Added URLs from plugin advanced_search: [<django.urls.resolvers.RoutePattern object at 0x103148bd0>]
+[09/Jan/2025 07:23:37] INFO: Successfully enabled plugin: advanced_search
+[09/Jan/2025 07:24:00] INFO: Plugin manager initialized
+[09/Jan/2025 07:24:00] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:24:00] INFO: Successfully loaded plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:24:00] INFO: Successfully loaded plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:24:00] INFO: Successfully loaded plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:24:00] INFO: Plugin discovery completed. Loaded 3 plugins.
+[09/Jan/2025 07:24:00] INFO: Plugin manager initialized
+[09/Jan/2025 07:24:00] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:24:00] INFO: Successfully loaded plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:24:00] INFO: Successfully loaded plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:24:00] INFO: Successfully loaded plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:24:00] INFO: Plugin discovery completed. Loaded 3 plugins.
+[09/Jan/2025 07:24:00] INFO: Added URLs from plugin product_reviews: [<django.urls.resolvers.RoutePattern object at 0x1066cbc90>, <django.urls.resolvers.RoutePattern object at 0x1066cbf50>]
+[09/Jan/2025 07:24:00] INFO: Added URLs from plugin server_logs: [<django.urls.resolvers.RoutePattern object at 0x1066c1ad0>, <django.urls.resolvers.RoutePattern object at 0x1066d0450>, <django.urls.resolvers.RoutePattern object at 0x1066d0690>]
+[09/Jan/2025 07:24:00] INFO: Added URLs from plugin advanced_search: [<django.urls.resolvers.RoutePattern object at 0x1066d0950>]
+[09/Jan/2025 07:24:03] INFO: Successfully enabled plugin: advanced_search
+[09/Jan/2025 07:24:38] INFO: Successfully enabled plugin: advanced_search
+[09/Jan/2025 07:25:03] INFO: Plugin manager initialized
+[09/Jan/2025 07:25:03] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:25:03] INFO: Successfully loaded plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:25:03] INFO: Successfully loaded plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:25:03] INFO: Successfully loaded plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:25:03] INFO: Plugin discovery completed. Loaded 3 plugins.
+[09/Jan/2025 07:25:03] INFO: Added URLs from plugin product_reviews: [<django.urls.resolvers.RoutePattern object at 0x10308fc10>, <django.urls.resolvers.RoutePattern object at 0x10308fed0>]
+[09/Jan/2025 07:25:03] INFO: Added URLs from plugin server_logs: [<django.urls.resolvers.RoutePattern object at 0x103094190>, <django.urls.resolvers.RoutePattern object at 0x103094410>, <django.urls.resolvers.RoutePattern object at 0x1030946d0>]
+[09/Jan/2025 07:25:03] INFO: Added URLs from plugin advanced_search: [<django.urls.resolvers.RoutePattern object at 0x103094950>]
+[09/Jan/2025 07:25:05] INFO: Successfully enabled plugin: advanced_search
+[09/Jan/2025 07:25:33] INFO: Successfully enabled plugin: advanced_search
+[09/Jan/2025 07:25:36] INFO: Successfully enabled plugin: advanced_search
+[09/Jan/2025 07:27:29] INFO: Successfully enabled plugin: advanced_search
+[09/Jan/2025 07:28:10] INFO: Successfully disabled plugin: server_logs
+[09/Jan/2025 07:28:18] INFO: Successfully disabled plugin: server_logs
+[09/Jan/2025 07:28:27] INFO: Successfully enabled plugin: server_logs
+[09/Jan/2025 07:31:18] INFO: Plugin manager initialized
+[09/Jan/2025 07:31:18] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:31:18] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:31:18] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:31:18] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:32:22] INFO: Plugin manager initialized
+[09/Jan/2025 07:32:22] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:32:22] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:32:22] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:32:22] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:32:22] INFO: Plugin manager initialized
+[09/Jan/2025 07:32:22] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:32:22] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:32:22] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:32:22] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:33:16] INFO: Plugin manager initialized
+[09/Jan/2025 07:33:16] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:33:16] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:33:16] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:33:16] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:33:46] INFO: Plugin manager initialized
+[09/Jan/2025 07:33:46] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:33:46] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:33:46] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:33:46] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:33:46] INFO: Plugin manager initialized
+[09/Jan/2025 07:33:46] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:33:46] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:33:46] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:33:46] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:35:04] INFO: Plugin manager initialized
+[09/Jan/2025 07:35:04] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:35:04] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:35:04] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:35:04] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:35:14] INFO: Plugin manager initialized
+[09/Jan/2025 07:35:14] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:35:14] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:35:14] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:35:14] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:35:15] INFO: Plugin manager initialized
+[09/Jan/2025 07:35:15] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:35:15] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:35:15] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:35:15] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:36:42] INFO: Plugin manager initialized
+[09/Jan/2025 07:36:42] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:36:42] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:36:42] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:36:42] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:38:53] INFO: Plugin manager initialized
+[09/Jan/2025 07:38:53] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:38:53] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:38:53] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:38:53] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:40:41] INFO: Plugin manager initialized
+[09/Jan/2025 07:40:41] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:40:41] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:40:41] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:40:41] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:45:52] INFO: Plugin manager initialized
+[09/Jan/2025 07:45:52] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:45:52] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:45:52] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:45:52] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:45:52] WARNING: Plugin not found or not enabled: server_logs
+[09/Jan/2025 07:45:52] WARNING: Plugin not found or not enabled: server_logs
+[09/Jan/2025 07:45:57] INFO: Plugin manager initialized
+[09/Jan/2025 07:45:57] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:45:57] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:45:57] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:45:57] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:45:57] INFO: Plugin manager initialized
+[09/Jan/2025 07:45:57] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:45:57] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:45:57] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:45:57] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:45:57] WARNING: Plugin not found or not enabled: server_logs
+[09/Jan/2025 07:45:57] WARNING: Plugin not found or not enabled: server_logs
+[09/Jan/2025 07:46:46] INFO: Plugin manager initialized
+[09/Jan/2025 07:46:46] INFO: Scanning for plugins in: /Users/kenny/DynamicStore/plugins
+[09/Jan/2025 07:46:46] INFO: Found plugin: product_reviews (version: 1.0.0)
+[09/Jan/2025 07:46:46] INFO: Found plugin: server_logs (version: 1.0.0)
+[09/Jan/2025 07:46:46] INFO: Found plugin: advanced_search (version: 1.0.0)
+[09/Jan/2025 07:46:46] INFO: Initialized plugin: server_logs
