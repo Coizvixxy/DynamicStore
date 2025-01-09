@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DynamicStore{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        /* Custom styles */
+        .top-bar {
+            background-color: #f8f9fa;
+            padding: 8px 0;
+            font-size: 0.9em;
+        }
+        .main-nav {
+            padding: 20px 0;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+        }
+        .nav-link:hover {
+            color: #0d6efd !important;
+        }
+        .search-form {
+            width: 100%;
+            max-width: 400px;
+        }
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 0;
+        }
+        .btn-outline-primary {
+            border-width: 2px;
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <span class="me-3"><i class="bi bi-telephone"></i> +1 234 567 890</span>
+                    <span><i class="bi bi-envelope"></i> support@dynamicstore.com</span>
+                </div>
+                <div class="col-md-6 text-end">
+                    {% if user.is_authenticated %}
+                        <span class="me-3">Welcome, {{ user.username }}</span>
+                        <a href="#" class="text-decoration-none text-dark me-3">My Account</a>
+                        <a href="{% url 'logout' %}" class="text-decoration-none text-dark">Logout</a>
+                    {% else %}
+                        <a href="#" class="text-decoration-none text-dark me-3">Login</a>
+                        <a href="#" class="text-decoration-none text-dark">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <a class="navbar-brand" href="{% url 'home' %}">
+                        <h1 class="h3 mb-0">DynamicStore</h1>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <form class="search-form mx-auto">
+                        <div class="input-group">
+                            <input type="search" class="form-control" placeholder="Search products...">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3 text-end">
+                    <a href="#" class="btn btn-outline-primary">
+                        <i class="bi bi-cart"></i> Cart (0)
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Category Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#categoryNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="categoryNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    {% for category in categories %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">{{ category.name }}</a>
+                    </li>
+                    {% endfor %}
+                    {% if user.is_superuser %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'product_management' %}">Product Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'plugin_management' %}">Plugin Management</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5>About DynamicStore</h5>
+                    <p>Your trusted online shopping destination for quality products at competitive prices.</p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Customer Service</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light">Contact Us</a></li>
+                        <li><a href="#" class="text-light">Shipping Information</a></li>
+                        <li><a href="#" class="text-light">Returns & Exchanges</a></li>
+                        <li><a href="#" class="text-light">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5>Newsletter</h5>
+                    <p>Subscribe to receive updates and special offers</p>
+                    <form>
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Your email">
+                            <button class="btn btn-light" type="submit">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr class="mt-4 mb-4 border-light">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 DynamicStore. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-light me-3">Privacy Policy</a>
+                    <a href="#" class="text-light">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

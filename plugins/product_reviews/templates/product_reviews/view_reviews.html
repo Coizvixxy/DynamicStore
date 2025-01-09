@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Reviews - {{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Reviews for {{ product.name }}</h2>
+    
+    <div class="mb-4">
+        <a href="{% url 'add_review' product.id %}" class="btn btn-primary">Write a Review</a>
+    </div>
+    
+    {% for review in reviews %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between">
+                <h5 class="card-title">
+                    {{ review.user.username }}
+                    <span class="text-warning">
+                        {% for i in review.rating|times %}★{% endfor %}
+                    </span>
+                </h5>
+                <small class="text-muted">{{ review.created_at|date:"F j, Y" }}</small>
+            </div>
+            <p class="card-text">{{ review.comment }}</p>
+        </div>
+    </div>
+    {% empty %}
+    <p>No reviews yet. Be the first to review this product!</p>
+    {% endfor %}
+</div>
+{% endblock %} 

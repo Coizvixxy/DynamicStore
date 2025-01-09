@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Plugin Management - DynamicStore{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>Plugin Management</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Plugin Name</th>
+                            <th>Version</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for plugin_info in plugins %}
+                        <tr>
+                            <td>{{ plugin_info.plugin.name }}</td>
+                            <td>{{ plugin_info.plugin.version }}</td>
+                            <td>
+                                <span class="badge {% if plugin_info.enabled %}bg-success{% else %}bg-danger{% endif %}">
+                                    {{ plugin_info.enabled|yesno:"Enabled,Disabled" }}
+                                </span>
+                            </td>
+                            <td>{{ plugin_info.description }}</td>
+                            <td>
+                                <form method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="plugin_name" value="{{ plugin_info.name }}">
+                                    {% if plugin_info.enabled %}
+                                        <input type="hidden" name="action" value="disable">
+                                        <button type="submit" class="btn btn-sm btn-warning">Disable</button>
+                                    {% else %}
+                                        <input type="hidden" name="action" value="enable">
+                                        <button type="submit" class="btn btn-sm btn-success">Enable</button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No plugins found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plugin Load Log -->
+    <div class="card mt-4">
+        <div class="card-header">
+            Plugin Load Log
+        </div>
+        <div class="card-body">
+            <pre class="bg-light p-3" style="max-height: 300px; overflow-y: auto;">
+{% for log in plugin_logs %}
+{{ log }}
+{% endfor %}
+            </pre>
+        </div>
+    </div>
+</div>
+{% endblock %} 

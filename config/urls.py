@@ -16,7 +16,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from core import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    path('', views.home, name='home'),
+    path('logout/', views.logout_view, name='logout'),
+    
+    # Product Management URLs
+    path('management/products/', views.product_management, name='product_management'),
+    path('management/product/add/', views.add_product, name='add_product'),
+    path('management/product/<int:product_id>/', views.get_product, name='get_product'),
+    path('management/product/<int:product_id>/edit/', views.edit_product, name='edit_product'),
+    path('management/product/<int:product_id>/delete/', views.delete_product, name='delete_product'),
+    path('product/<int:product_id>/', views.product_detail, name='product_detail'),
+    path('management/plugins/', views.plugin_management, name='plugin_management'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
