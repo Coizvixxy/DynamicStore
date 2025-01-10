@@ -1,0 +1,245 @@
+<!-- Combined Logs Card -->
+<div class="card">
+    <div class="card-header p-0 border-bottom-0">
+        <div class="d-flex justify-content-between align-items-center bg-light p-3">
+            <h5 class="mb-0">System Logs</h5>
+            <div class="btn-group">
+                <button class="btn btn-sm btn-outline-secondary" onclick="refreshLogs()">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh
+                </button>
+                <button class="btn btn-sm btn-outline-primary" onclick="toggleLogExpand()">
+                    <i class="bi bi-arrows-angle-expand"></i> Toggle Height
+                </button>
+            </div>
+        </div>
+        <ul class="nav nav-tabs nav-fill">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active px-4" data-bs-toggle="tab" href="#pluginLogs" role="tab">
+                    <i class="bi bi-plugin me-2"></i>
+                    <span class="d-none d-sm-inline">Plugin Load Log</span>
+                    <span class="d-sm-none">Plugin</span>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link px-4" data-bs-toggle="tab" href="#serverLogs" role="tab">
+                    <i class="bi bi-server me-2"></i>
+                    <span class="d-none d-sm-inline">Server Logs</span>
+                    <span class="d-sm-none">Server</span>
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link px-4" data-bs-toggle="tab" href="#activityLogs" role="tab">
+                    <i class="bi bi-person-lines-fill me-2"></i>
+                    <span class="d-none d-sm-inline">Activity Logs</span>
+                    <span class="d-sm-none">Activity</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body p-0">
+        <div class="tab-content">
+            <!-- Plugin Load Logs -->
+            <div class="tab-pane fade show active p-3" id="pluginLogs">
+                <div class="log-viewer bg-light p-3" style="height: 300px; overflow-y: auto;">
+                    {% for log in plugin_logs %}
+                        <div class="log-entry {% if 'ERROR' in log %}text-danger{% elif 'WARNING' in log %}text-warning{% endif %}">
+                            {{ log }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Server Logs -->
+            <div class="tab-pane fade p-3" id="serverLogs">
+                <div class="log-viewer bg-light p-3" style="height: 300px; overflow-y: auto;">
+                    <div id="serverLogContent"></div>
+                </div>
+            </div>
+
+            <!-- Activity Logs -->
+            <div class="tab-pane fade p-3" id="activityLogs">
+                <div class="log-viewer bg-light p-3" style="height: 300px; overflow-y: auto;">
+                    <div id="activityLogContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentLogType = 'plugin';
+let autoRefresh = null;
+
+// 添加 getLogLevelClass 函數
+function getLogLevelClass(level) {
+    switch(level.toUpperCase()) {
+        case 'ERROR':
+            return 'text-danger';
+        case 'WARNING':
+            return 'text-warning';
+        case 'INFO':
+            return 'text-success';
+        case 'DEBUG':
+            return 'text-info';
+        default:
+            return 'text-secondary';
+    }
+}
+
+function refreshLogs() {
+    if (currentLogType === 'plugin') {
+        location.reload();
+    } else {
+        fetchLogs(currentLogType);
+    }
+}
+
+function fetchLogs(logType) {
+    const contentDiv = document.getElementById(`${logType}LogContent`);
+    if (contentDiv) {
+        contentDiv.innerHTML = `
+            <div class="log-entry text-info">
+                <i class="bi bi-arrow-repeat spin me-2"></i>
+                Loading ${logType} logs...
+            </div>
+        `;
+    }
+
+    const url = `/plugins/logs/${logType}/api/`;
+    console.log(`Fetching logs from: ${url}`); // Debug log
+
+    fetch(url, {
+        credentials: 'same-origin',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        console.log(`Response status: ${response.status}`); // Debug log
+        if (!response.ok) {
+            if (response.status === 403) {
+                throw new Error('Permission denied');
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Received data:', data); // Debug log
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        
+        if (contentDiv && data.logs) {
+            if (data.logs.length === 0) {
+                contentDiv.innerHTML = `
+                    <div class="log-entry text-muted">
+                        <i class="bi bi-info-circle me-2"></i>
+                        No logs available
+                    </div>
+                `;
+                return;
+            }
+
+            contentDiv.innerHTML = data.logs.map(log => `
+                <div class="log-entry ${getLogLevelClass(log.level)}">
+                    <span class="log-timestamp">[${log.timestamp}]</span>
+                    <span class="log-level">${log.level}:</span>
+                    <span class="log-message">${log.message}</span>
+                </div>
+            `).join('');
+            
+            contentDiv.parentElement.scrollTop = contentDiv.parentElement.scrollHeight;
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching logs:', error); // Debug log
+        if (contentDiv) {
+            contentDiv.innerHTML = `
+                <div class="log-entry text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Error: ${error.message}
+                    <button class="btn btn-sm btn-outline-danger ms-2" onclick="fetchLogs('${logType}')">
+                        <i class="bi bi-arrow-clockwise"></i> Retry
+                    </button>
+                </div>
+            `;
+        }
+    });
+}
+
+// 更新 CSS 樣式
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    .spin {
+        animation: spin 1s linear infinite;
+        display: inline-block;
+    }
+    .log-entry {
+        padding: 4px 8px;
+        border-radius: 4px;
+        margin-bottom: 4px;
+        transition: background-color 0.2s;
+    }
+    .log-entry:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+    .log-timestamp {
+        color: #666;
+        font-family: monospace;
+    }
+    .log-level {
+        font-weight: bold;
+        margin: 0 8px;
+    }
+    .log-message {
+        word-break: break-word;
+    }
+    .text-info { color: #0dcaf0; }
+    .text-muted { color: #6c757d; }
+    .text-danger { color: #dc3545; }
+    .text-warning { color: #ffc107; }
+    .text-success { color: #198754; }
+    .text-secondary { color: #6c757d; }
+`;
+document.head.appendChild(style);
+
+// 更新自動刷新邏輯
+function setupAutoRefresh(logType) {
+    console.log(`Setting up auto-refresh for ${logType}`); // Debug log
+    if (autoRefresh) {
+        clearInterval(autoRefresh);
+    }
+    
+    if (logType !== 'plugin') {
+        fetchLogs(logType);
+        autoRefresh = setInterval(() => fetchLogs(logType), 5000);
+    }
+}
+
+// 確保在頁面加載時開始獲取日誌
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Page loaded, setting up log viewers'); // Debug log
+    const tabElements = document.querySelectorAll('a[data-bs-toggle="tab"]');
+    
+    tabElements.forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function(event) {
+            const targetId = event.target.getAttribute('href');
+            currentLogType = targetId.replace('#', '').replace('Logs', '').toLowerCase();
+            console.log(`Tab changed to: ${currentLogType}`); // Debug log
+            setupAutoRefresh(currentLogType);
+        });
+    });
+
+    // 初始加載插件日誌
+    setupAutoRefresh('server');
+});
+</script>
+
+<style>
+/* ... (CSS 樣式保持不變) ... */
+</style> 

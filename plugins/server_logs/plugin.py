@@ -68,22 +68,26 @@ class Plugin(PluginInterface):
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def view_logs(self, request, log_type='server'):
         """渲染日誌視圖"""
-        return render(request, 'server_logs/view_logs.html', {
+        context = {
             'log_type': log_type,
-            'log_types': self.LOG_TYPES
-        })
+            'log_types': self.LOG_TYPES,
+            'plugin_logs': self.read_plugin_logs(),  # 添加插件日誌
+        }
+        return render(request, 'server_logs/logs_content.html', context)
     
     def get_logs_api(self, request, log_type):
         """API endpoint for fetching logs"""
-        if not request.user.is_superuser:
-            return JsonResponse({
-                'error': 'Permission denied'
-            }, status=403)
-
         try:
+            if not request.user.is_superuser:
+                logger.warning(f"Unauthorized access attempt from {request.user}")
+                return JsonResponse({
+                    'error': 'Permission denied'
+                }, status=403)
+
             n = int(request.GET.get('lines', 100))
-            logs = []
+            logger.debug(f"Fetching {n} lines of {log_type} logs")
             
+            logs = []
             if log_type == 'server':
                 logs = self.read_server_logs(n)
             elif log_type == 'activity':
@@ -93,18 +97,21 @@ class Plugin(PluginInterface):
             elif log_type == 'messages':
                 logs = self.read_message_logs(n)
             else:
+                logger.error(f"Unknown log type requested: {log_type}")
                 return JsonResponse({
                     'error': f'Unknown log type: {log_type}'
                 }, status=400)
             
+            logger.debug(f"Retrieved {len(logs)} log entries")
             return JsonResponse({
                 'logs': logs,
-                'timestamp': datetime.now().isoformat()
+                'timestamp': datetime.now().isoformat(),
+                'count': len(logs)
             })
         except Exception as e:
-            logger.error(f"Error in get_logs_api: {str(e)}")
+            logger.error(f"Error in get_logs_api: {str(e)}", exc_info=True)
             return JsonResponse({
-                'error': str(e)
+                'error': f"Failed to fetch logs: {str(e)}"
             }, status=500)
     
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
@@ -125,10 +132,15 @@ class Plugin(PluginInterface):
         """Read server logs"""
         try:
             with open('server.log', 'r') as f:
-                return self.parse_logs(f.readlines()[-n_lines:])
+                lines = f.readlines()[-n_lines:]
+                return [{
+                    'timestamp': line.split(']')[0].strip('['),
+                    'level': line.split(']')[1].split(':')[0].strip(),
+                    'message': ':'.join(line.split(':')[1:]).strip()
+                } for line in lines]
         except FileNotFoundError:
             return [{
-                'timestamp': datetime.now().isoformat(),
+                'timestamp': datetime.now().strftime('%d/%b/%Y %H:%M:%S'),
                 'level': 'ERROR',
                 'message': 'Server log file not found'
             }]
@@ -137,10 +149,15 @@ class Plugin(PluginInterface):
         """Read activity logs"""
         try:
             with open('activity.log', 'r') as f:
-                return self.parse_logs(f.readlines()[-n_lines:])
+                lines = f.readlines()[-n_lines:]
+                return [{
+                    'timestamp': line.split(']')[0].strip('['),
+                    'level': line.split(']')[1].split(':')[0].strip(),
+                    'message': ':'.join(line.split(':')[1:]).strip()
+                } for line in lines]
         except FileNotFoundError:
             return [{
-                'timestamp': datetime.now().isoformat(),
+                'timestamp': datetime.now().strftime('%d/%b/%Y %H:%M:%S'),
                 'level': 'ERROR',
                 'message': 'Activity log file not found'
             }]
@@ -209,3 +226,11 @@ class Plugin(PluginInterface):
                         f.write(f'[{timestamp}] INFO: {log_file} initialized\n')
                 except Exception as e:
                     logger.error(f"Failed to create {log_file}: {str(e)}") 
+    
+    def read_plugin_logs(self, n_lines=50):
+        """讀取插件日誌"""
+        try:
+            with open('plugin.log', 'r') as f:
+                return f.readlines()[-n_lines:]
+        except FileNotFoundError:
+            return ['No plugin logs found'] 

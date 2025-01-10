@@ -122,73 +122,8 @@
     </div>
     {% endfor %}
 
-    <!-- Combined Logs Card -->
-    <div class="card">
-        <div class="card-header p-0 border-bottom-0">
-            <div class="d-flex justify-content-between align-items-center bg-light p-3">
-                <h5 class="mb-0">System Logs</h5>
-                <div class="btn-group">
-                    <button class="btn btn-sm btn-outline-secondary" onclick="refreshLogs()">
-                        <i class="bi bi-arrow-clockwise"></i> Refresh
-                    </button>
-                    <button class="btn btn-sm btn-outline-primary" onclick="toggleLogExpand()">
-                        <i class="bi bi-arrows-angle-expand"></i> Toggle Height
-                    </button>
-                </div>
-            </div>
-            <ul class="nav nav-tabs nav-fill">
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link active px-4" data-bs-toggle="tab" href="#pluginLogs" role="tab">
-                        <i class="bi bi-plugin me-2"></i>
-                        <span class="d-none d-sm-inline">Plugin Load Log</span>
-                        <span class="d-sm-none">Plugin</span>
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link px-4" data-bs-toggle="tab" href="#serverLogs" role="tab">
-                        <i class="bi bi-server me-2"></i>
-                        <span class="d-none d-sm-inline">Server Logs</span>
-                        <span class="d-sm-none">Server</span>
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <a class="nav-link px-4" data-bs-toggle="tab" href="#activityLogs" role="tab">
-                        <i class="bi bi-person-lines-fill me-2"></i>
-                        <span class="d-none d-sm-inline">Activity Logs</span>
-                        <span class="d-sm-none">Activity</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div class="card-body p-0">
-            <div class="tab-content">
-                <!-- Plugin Load Logs -->
-                <div class="tab-pane fade show active p-3" id="pluginLogs">
-                    <div class="log-viewer bg-light p-3" style="height: 300px; overflow-y: auto;">
-                        {% for log in plugin_logs %}
-                            <div class="log-entry {% if 'ERROR' in log %}text-danger{% elif 'WARNING' in log %}text-warning{% endif %}">
-                                {{ log }}
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-
-                <!-- Server Logs -->
-                <div class="tab-pane fade p-3" id="serverLogs">
-                    <div class="log-viewer bg-light p-3" style="height: 300px; overflow-y: auto;">
-                        <div id="serverLogContent"></div>
-                    </div>
-                </div>
-
-                <!-- Activity Logs -->
-                <div class="tab-pane fade p-3" id="activityLogs">
-                    <div class="log-viewer bg-light p-3" style="height: 300px; overflow-y: auto;">
-                        <div id="activityLogContent"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- 加載 Server Logs 插件的日誌視圖 -->
+    {% include 'server_logs/logs_content.html' %}
 </div>
 {% endblock %}
 

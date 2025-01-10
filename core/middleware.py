@@ -21,6 +21,6 @@ class UserActivityMiddleware:
         if not request.path.startswith(('/static/', '/media/')):
             timestamp = datetime.now().strftime('%d/%b/%Y %H:%M:%S')
             with open('activity.log', 'a') as f:
-                f.write(f'[{timestamp}] INFO: Response to {user}: {response.status_code} ({response.resolver_match.view_name if hasattr(response, "resolver_match") else "unknown"})\n')
+                f.write(f'[{timestamp}] INFO: Response to {user}: {response.status_code}\n')
 
         return response 

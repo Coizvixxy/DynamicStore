@@ -105,16 +105,6 @@ def product_detail(request, product_id):
 
 @user_passes_test(is_superuser)
 def plugin_management(request):
-    if request.method == 'POST':
-        plugin_name = request.POST.get('plugin_name')
-        action = request.POST.get('action')
-        
-        if action == 'enable':
-            plugin_manager.enable_plugin(plugin_name)
-        elif action == 'disable':
-            plugin_manager.disable_plugin(plugin_name)
-    
-    # 獲取插件信息
     plugins = plugin_manager.get_all_plugins()
     
     # 讀取插件日誌
