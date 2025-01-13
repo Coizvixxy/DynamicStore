@@ -55,5 +55,5 @@ urlpatterns = [
     
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
-    path('nintendo-login/', views.nintendo_login_view, name='nintendo_login'),
+    path('nintendo_accounts/', views.nintendo_accounts_view, name='nintendo_accounts'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

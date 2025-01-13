@@ -167,5 +167,5 @@ def register_view(request):
     
     return render(request, 'auth/register.html')
 
-def nintendo_login_view(request):
-    return render(request, 'auth/nintendo_login.html')
+def nintendo_accounts_view(request):
+    return render(request, 'auth/nintendo_accounts.html')

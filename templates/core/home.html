@@ -18,7 +18,7 @@
                         <a href="#" class="text-decoration-none text-white me-3">My Account</a>
                         <a href="{% url 'logout' %}" class="text-decoration-none text-white">Logout</a>
                     {% else %}
-                        <a href="{% url 'nintendo_login' %}" class="btn btn-nintendo-account">
+                        <a href="{% url 'nintendo_accounts' %}" class="btn btn-nintendo-account">
                             <i class="bi bi-person-circle me-2"></i>Account
                         </a>
                     {% endif %}
@@ -32,7 +32,7 @@
                 <h1 class="display-4 mb-4 text-white">Welcome to DynamicStore</h1>
                 <p class="lead mb-5 text-white">Your Gaming Entertainment Shopping Platform</p>
                 
-                <a href="{% url 'nintendo_login' %}" class="btn btn-nintendo-red btn-lg">
+                <a href="{% url 'nintendo_accounts' %}" class="btn btn-nintendo-red btn-lg">
                     <i class="bi bi-nintendo-switch me-2"></i>Nintendo Account
                 </a>
             </div>

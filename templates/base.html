@@ -100,58 +100,6 @@
 </head>
 <body>
     <div class="site-wrapper">
-        <!-- Top Bar -->
-        <!-- <div class="top-bar">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <span class="me-3"><i class="bi bi-telephone"></i> +1 234 567 890</span>
-                        <span><i class="bi bi-envelope"></i> support@dynamicstore.com</span>
-                    </div>
-                    <div class="col-md-6 text-end">
-                        {% if user.is_authenticated %}
-                            <span class="me-3">Welcome, {{ user.username }}</span>
-                            <a href="#" class="text-decoration-none text-dark me-3">My Account</a>
-                            <a href="{% url 'logout' %}" class="text-decoration-none text-dark">Logout</a>
-                        {% else %}
-                            <a href="{% url 'nintendo_login' %}" class="btn btn-nintendo-account">
-                                <i class="bi bi-person-circle me-2"></i>Account
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-        <!-- Main Navigation -->
-        <!-- <nav class="main-nav">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-md-3">
-                        <a class="navbar-brand" href="{% url 'home' %}">
-                            <h1 class="h3 mb-0">DynamicStore</h1>
-                        </a>
-                    </div>
-                    <div class="col-md-6">
-                        <form class="search-form mx-auto">
-                            <div class="input-group">
-                                <input type="search" class="form-control" placeholder="Search products...">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="bi bi-search"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="col-md-3 text-end">
-                        <a href="#" class="btn btn-outline-primary">
-                            <i class="bi bi-cart"></i> Cart (0)
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </nav> -->
-
-        <!-- Main Content -->
         <div class="main-content bg-transparent">
             {% block content %}{% endblock %}
         </div>
