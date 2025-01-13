@@ -7,6 +7,7 @@ from .models import Category, Product
 from .plugins import plugin_manager
 from django.contrib import messages
 from django.contrib.auth.models import User
+from datetime import datetime
 
 def home(request):
     categories = Category.objects.all()[:3]  # Get first 3 categories
@@ -169,3 +170,105 @@ def register_view(request):
 
 def nintendo_accounts_view(request):
     return render(request, 'auth/nintendo_accounts.html')
+
+def register_customer(request):
+    current_year = datetime.now().year
+    year_range = range(current_year, current_year - 100, -1)
+    
+    context = {
+        'year_range': year_range
+    }
+    
+    if request.method == 'POST':
+        # 獲取表單數據
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        shipping_address = request.POST.get('shipping_address')
+        
+        # 驗證密碼
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'auth/register_customer.html', context)
+        
+        # 檢查用戶名和郵箱是否已存在
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists.')
+            return render(request, 'auth/register_customer.html', context)
+        
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already registered.')
+            return render(request, 'auth/register_customer.html', context)
+        
+        # 創建用戶
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1,
+            first_name=first_name,
+            last_name=last_name
+        )
+        
+        # 創建客戶檔案
+        customer = Customer.objects.create(
+            user=user,
+            shipping_address=shipping_address
+        )
+        
+        login(request, user)
+        messages.success(request, 'Registration successful!')
+        return redirect('home')
+    
+    return render(request, 'auth/register_customer.html', context)
+
+def register_vendor(request):
+    if request.method == 'POST':
+        # 獲取表單數據
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        store_name = request.POST.get('store_name')
+        store_description = request.POST.get('store_description')
+        
+        # 驗證密碼
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'auth/register_vendor.html')
+        
+        # 檢查用戶名和郵箱是否已存在
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists.')
+            return render(request, 'auth/register_vendor.html')
+        
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already registered.')
+            return render(request, 'auth/register_vendor.html')
+        
+        # 創建用戶
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1,
+            first_name=first_name,
+            last_name=last_name,
+            is_staff=True  # 給予商家後台訪問權限
+        )
+        
+        # 創建商家檔案
+        vendor = Vendor.objects.create(
+            user=user,
+            store_name=store_name,
+            store_description=store_description
+        )
+        
+        login(request, user)
+        messages.success(request, 'Vendor registration successful!')
+        return redirect('home')
+    
+    return render(request, 'auth/register_vendor.html')

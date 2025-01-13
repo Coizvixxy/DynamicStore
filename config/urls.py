@@ -53,7 +53,10 @@ urlpatterns = [
     # 插件 URLs
     path('plugins/', include((get_plugin_urls(), 'plugins'), namespace='plugins')),
     
+    # 認證相關 URLs
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('nintendo_accounts/', views.nintendo_accounts_view, name='nintendo_accounts'),
+    path('register/customer/', views.register_customer, name='register_customer'),
+    path('register/vendor/', views.register_vendor, name='register_vendor'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

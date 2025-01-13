@@ -1,1 +1,296 @@
- 
+{% extends 'base.html' %}
+
+{% block title %}Register Customer - DynamicStore{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="nintendo-login-box">
+                <h1 class="text-center mb-4">Create Nintendo Account</h1>
+                
+                <section class="RegisterForm_signup">
+                    <p class="RegisterForm_signup_desc mb-4">
+                        If you don't have an account with one of the services listed above or would rather not use an existing account to create your Nintendo Account, please enter your information below.
+                    </p>
+
+                    {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post" action="{% url 'register_customer' %}" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Nickname -->
+                        <div class="RegisterForm_signup_group c-formGroup mb-4">
+                            <div class="RegisterForm_signup_label">
+                                <label class="form-label">Nickname</label>
+                            </div>
+                            <div class="RegisterForm_signup_input">
+                                <input type="text" name="nickname" class="form-control" placeholder="10 characters or less" maxlength="10" required>
+                                <p class="c-formNote text-muted mt-1">Note: This will be used in communications from Nintendo.</p>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="RegisterForm_signup_group c-formGroup mb-4">
+                            <div class="RegisterForm_signup_label">
+                                <label class="form-label">Email Address</label>
+                            </div>
+                            <div class="RegisterForm_signup_input">
+                                <input type="email" name="email" class="form-control" required>
+                                <p class="c-formNote text-muted mt-1">*An email address accessible from a PC or web browser is recommended.</p>
+                            </div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="RegisterForm_signup_group c-formGroup mb-4">
+                            <div class="RegisterForm_signup_label">
+                                <label class="form-label">Password</label>
+                            </div>
+                            <div class="RegisterForm_signup_input">
+                                <div class="password-strength mb-2">
+                                    <span>Password strength:</span>
+                                    <span class="strength-result">-</span>
+                                </div>
+                                <input type="password" name="password1" class="form-control" placeholder="At least 8 characters" minlength="8" required>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="RegisterForm_signup_group c-formGroup mb-4">
+                            <div class="RegisterForm_signup_label">
+                                <label class="form-label">Confirm Password</label>
+                            </div>
+                            <div class="RegisterForm_signup_input">
+                                <input type="password" name="password2" class="form-control" placeholder="At least 8 characters" minlength="8" required>
+                            </div>
+                        </div>
+
+                        <!-- Date of Birth -->
+                        <div class="RegisterForm_signup_group c-formGroup mb-4">
+                            <div class="RegisterForm_signup_label">
+                                <label class="form-label">Date of Birth</label>
+                            </div>
+                            <div class="RegisterForm_signup_input">
+                                <div class="row g-2">
+                                    <div class="col-4">
+                                        <select name="birth_year" class="form-select" required>
+                                            <option value="">Year</option>
+                                            {% for year in year_range %}
+                                            <option value="{{ year }}">{{ year }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <select name="birth_month" class="form-select" required>
+                                            <option value="">Month</option>
+                                            {% for i in "123456789101112"|make_list %}
+                                            <option value="{{ i }}">{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <select name="birth_day" class="form-select" required>
+                                            <option value="">Day</option>
+                                            {% for i in "12345678910111213141516171819202122232425262728293031"|make_list %}
+                                            <option value="{{ i }}">{{ i }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <p class="c-formNote text-muted mt-1">*You can't change your date of birth later.</p>
+                            </div>
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="RegisterForm_signup_group c-formGroup mb-4">
+                            <div class="RegisterForm_signup_label">
+                                <label class="form-label">Gender</label>
+                            </div>
+                            <div class="RegisterForm_signup_input">
+                                <select name="gender" class="form-select">
+                                    <option value="">(None selected)</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="unknown">Choose not to answer</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Country -->
+                        <div class="RegisterForm_signup_group c-formGroup mb-4">
+                            <div class="RegisterForm_signup_label">
+                                <label class="form-label">Country/region of residence</label>
+                            </div>
+                            <div class="RegisterForm_signup_input">
+                                <select name="country" class="form-select" required>
+                                    <option value="">(None selected)</option>
+                                    <option value="HK">Hong Kong</option>
+                                    <option value="MO">Macau</option>
+                                    <option value="TW">Taiwan</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Terms -->
+                        <div class="RegisterForm_signup_groupCheckbox mb-4">
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                                <label class="form-check-label" for="terms">
+                                    By checking the box and selecting [Continue] below, you agree to the <a href="#" target="_blank">NINTENDO ACCOUNT USER AGREEMENT</a>.
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="privacy" name="privacy" required>
+                                <label class="form-check-label" for="privacy">
+                                    By checking the box and selecting [Continue] below, you acknowledge that you have read the <a href="#" target="_blank">NINTENDO PRIVACY POLICY</a>.
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-nintendo-red btn-lg">Continue</button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.nintendo-login-box {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nintendo-card {
+    transition: transform 0.2s;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nintendo-card:hover {
+    transform: translateY(-5px);
+}
+
+.btn-nintendo-red, .btn-nintendo-blue {
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.btn-nintendo-red {
+    background-color: #e60012;
+    color: white;
+}
+
+.btn-nintendo-blue {
+    background-color: #0b6bc6;
+    color: white;
+}
+
+.btn-nintendo-red:hover {
+    background-color: #b3000e;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-nintendo-blue:hover {
+    background-color: #085494;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    color: #1f1f1f;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.list-unstyled li {
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.c-formNote {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.password-strength {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.form-select {
+    padding-right: 2rem;
+    background-position: right 0.75rem center;
+}
+
+.RegisterForm_signup_desc {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.RegisterForm_signup_group {
+    margin-bottom: 1.5rem;
+}
+
+.RegisterForm_signup_label {
+    margin-bottom: 0.5rem;
+}
+
+.RegisterForm_signup_input {
+    position: relative;
+}
+
+.form-check-label {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+.form-check-label a {
+    color: #0b6bc6;
+    text-decoration: none;
+}
+
+.form-check-label a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<script>
+// 密碼強度檢查
+document.querySelector('input[name="password1"]').addEventListener('input', function(e) {
+    const password = e.target.value;
+    let strength = '-';
+    
+    if (password.length >= 8) {
+        if (/(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])/.test(password)) {
+            strength = 'Strong';
+        } else if (/(?=.*[a-zA-Z])(?=.*[0-9])/.test(password)) {
+            strength = 'Medium';
+        } else {
+            strength = 'Weak';
+        }
+    }
+    
+    document.querySelector('.strength-result').textContent = strength;
+});
+</script>
+{% endblock %} 
