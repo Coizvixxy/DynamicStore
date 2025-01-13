@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Nintendo Account - DynamicStore{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="nintendo-login-box">
+                <h1 class="mb-4">Nintendo Account</h1>
+                <p class="lead mb-5">Sign in with your Nintendo Account<br>or create a new one.</p>
+                
+                <div class="row justify-content-center g-4">
+                    <div class="col-md-6">
+                        <div class="card h-100 nintendo-card">
+                            <div class="card-body d-flex flex-column">
+                                <h3 class="card-title mb-4">Existing Accounts</h3>
+                                <p class="card-text flex-grow-1">Sign in with your Nintendo Account to start shopping.</p>
+                                <a href="{% url 'login' %}" class="btn btn-nintendo-red btn-lg">Sign In</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100 nintendo-card">
+                            <div class="card-body d-flex flex-column">
+                                <h3 class="card-title mb-4">New Accounts</h3>
+                                <p class="card-text flex-grow-1">Create a new Nintendo Account to begin your gaming journey.</p>
+                                <a href="{% url 'register' %}" class="btn btn-nintendo-blue btn-lg">Create Account</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.nintendo-login-box {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.nintendo-login-box h1 {
+    color: #e60012;
+    font-weight: bold;
+    font-size: 2.5rem;
+}
+
+.nintendo-card {
+    transition: transform 0.2s;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.nintendo-card:hover {
+    transform: translateY(-5px);
+}
+
+.btn-nintendo-red {
+    background-color: #e60012;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-nintendo-blue {
+    background-color: #0b6bc6;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-nintendo-red:hover {
+    background-color: #b3000e;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-nintendo-blue:hover {
+    background-color: #085494;
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.card-title {
+    color: #1f1f1f;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.card-text {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .nintendo-login-box {
+        padding: 2rem;
+    }
+    
+    .nintendo-login-box h1 {
+        font-size: 2rem;
+    }
+}
+</style>
+{% endblock %} 

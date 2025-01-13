@@ -7,166 +7,159 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        /* Custom styles */
+        /* Base styles */
+        body {
+            min-height: 100vh;
+            width: 100%;
+            background-color: #ebe8f0;  
+            position: relative;
+            margin: 0;
+            padding: 15px;  /* 創建白色邊距的空間 */
+        }
+
+        /* 主容器 */
+        .site-wrapper {
+            min-height: calc(100vh - 30px);  /* 減去padding空間 */
+            background-color: #e70112;
+            background-image: 
+                url('/static/assets/UI/background/pattern.svg');
+            background-size: 
+                cover,
+                200px 200px;
+            background-position: center;
+            background-attachment: fixed;
+            background-blend-mode: overlay;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Navigation Styles */
         .top-bar {
-            background-color: #f8f9fa;
+            background-color: #e70112;
             padding: 8px 0;
             font-size: 0.9em;
+            border-radius: 5px 5px 0 0;
         }
+
         .main-nav {
+            background-color: #e70112;
             padding: 20px 0;
-            background-color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .nav-link {
-            color: #333 !important;
-            font-weight: 500;
+
+        /* Content Styles */
+        .main-content {
+            min-height: calc(100vh - 200px);  /* 調整高度 */
         }
-        .nav-link:hover {
-            color: #0d6efd !important;
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 10px;
         }
-        .search-form {
-            width: 100%;
-            max-width: 400px;
+
+        .card-body {
+            padding: 2rem;
         }
+
+        /* Form Styles */
+        .form-control {
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 10px 15px;
+        }
+
+        .form-control:focus {
+            border-color: #e70112;
+            box-shadow: 0 0 0 0.2rem rgba(231, 1, 18, 0.25);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background-color: #e70112;
+            border-color: #e70112;
+        }
+
+        .btn-primary:hover {
+            background-color: #c40110;
+            border-color: #c40110;
+        }
+
+        /* Footer */
         .footer {
-            background-color: #2c3e50;
+            background-color: rgba(44, 62, 80, 0.95);
             color: white;
             padding: 40px 0;
-        }
-        .btn-outline-primary {
-            border-width: 2px;
+            border-radius: 0 0 5px 5px;
         }
     </style>
+
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <span class="me-3"><i class="bi bi-telephone"></i> +1 234 567 890</span>
-                    <span><i class="bi bi-envelope"></i> support@dynamicstore.com</span>
-                </div>
-                <div class="col-md-6 text-end">
-                    {% if user.is_authenticated %}
-                        <span class="me-3">Welcome, {{ user.username }}</span>
-                        <a href="#" class="text-decoration-none text-dark me-3">My Account</a>
-                        <a href="{% url 'logout' %}" class="text-decoration-none text-dark">Logout</a>
-                    {% else %}
-                        <a href="#" class="text-decoration-none text-dark me-3">Login</a>
-                        <a href="#" class="text-decoration-none text-dark">Register</a>
-                    {% endif %}
+    <div class="site-wrapper">
+        <!-- Top Bar -->
+        <!-- <div class="top-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <span class="me-3"><i class="bi bi-telephone"></i> +1 234 567 890</span>
+                        <span><i class="bi bi-envelope"></i> support@dynamicstore.com</span>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        {% if user.is_authenticated %}
+                            <span class="me-3">Welcome, {{ user.username }}</span>
+                            <a href="#" class="text-decoration-none text-dark me-3">My Account</a>
+                            <a href="{% url 'logout' %}" class="text-decoration-none text-dark">Logout</a>
+                        {% else %}
+                            <a href="{% url 'nintendo_login' %}" class="btn btn-nintendo-account">
+                                <i class="bi bi-person-circle me-2"></i>Account
+                            </a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
+        </div> -->
+
+        <!-- Main Navigation -->
+        <!-- <nav class="main-nav">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <a class="navbar-brand" href="{% url 'home' %}">
+                            <h1 class="h3 mb-0">DynamicStore</h1>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <form class="search-form mx-auto">
+                            <div class="input-group">
+                                <input type="search" class="form-control" placeholder="Search products...">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <a href="#" class="btn btn-outline-primary">
+                            <i class="bi bi-cart"></i> Cart (0)
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav> -->
+
+        <!-- Main Content -->
+        <div class="main-content bg-transparent">
+            {% block content %}{% endblock %}
         </div>
+
     </div>
-
-    <!-- Main Navigation -->
-    <nav class="main-nav">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-3">
-                    <a class="navbar-brand" href="{% url 'home' %}">
-                        <h1 class="h3 mb-0">DynamicStore</h1>
-                    </a>
-                </div>
-                <div class="col-md-6">
-                    <form class="search-form mx-auto">
-                        <div class="input-group">
-                            <input type="search" class="form-control" placeholder="Search products...">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-md-3 text-end">
-                    <a href="#" class="btn btn-outline-primary">
-                        <i class="bi bi-cart"></i> Cart (0)
-                    </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Category Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#categoryNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="categoryNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Home</a>
-                    </li>
-                    {% for category in categories %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">{{ category.name }}</a>
-                    </li>
-                    {% endfor %}
-                    {% if user.is_superuser %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product_management' %}">Product Management</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'plugin_management' %}">Plugin Management</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="py-4">
-        {% block content %}{% endblock %}
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5>About DynamicStore</h5>
-                    <p>Your trusted online shopping destination for quality products at competitive prices.</p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5>Customer Service</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-light">Contact Us</a></li>
-                        <li><a href="#" class="text-light">Shipping Information</a></li>
-                        <li><a href="#" class="text-light">Returns & Exchanges</a></li>
-                        <li><a href="#" class="text-light">FAQ</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h5>Newsletter</h5>
-                    <p>Subscribe to receive updates and special offers</p>
-                    <form>
-                        <div class="input-group">
-                            <input type="email" class="form-control" placeholder="Your email">
-                            <button class="btn btn-light" type="submit">Subscribe</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <hr class="mt-4 mb-4 border-light">
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="mb-0">&copy; 2024 DynamicStore. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-end">
-                    <a href="#" class="text-light me-3">Privacy Policy</a>
-                    <a href="#" class="text-light">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     {% block extra_js %}{% endblock %}
 </body>
+</html> 
 </html> 

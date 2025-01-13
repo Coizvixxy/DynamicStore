@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from .models import Category, Product
 from .plugins import plugin_manager
+from django.contrib import messages
+from django.contrib.auth.models import User
 
 def home(request):
     categories = Category.objects.all()[:3]  # Get first 3 categories
@@ -118,3 +120,52 @@ def plugin_management(request):
         'plugins': plugins,
         'plugin_logs': plugin_logs
     })
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'Successfully logged in!')
+            return redirect('home')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    
+    return render(request, 'auth/login.html')
+
+def register_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match.')
+            return render(request, 'auth/register.html')
+        
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists.')
+            return render(request, 'auth/register.html')
+        
+        if User.objects.filter(email=email).exists():
+            messages.error(request, 'Email already registered.')
+            return render(request, 'auth/register.html')
+        
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password1
+        )
+        
+        login(request, user)
+        messages.success(request, 'Registration successful!')
+        return redirect('home')
+    
+    return render(request, 'auth/register.html')
+
+def nintendo_login_view(request):
+    return render(request, 'auth/nintendo_login.html')

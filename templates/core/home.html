@@ -3,130 +3,84 @@
 {% block title %}Welcome to DynamicStore{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<div class="container mb-5">
-    <div class="row">
-        <div class="col-md-8">
-            <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="https://via.placeholder.com/800x400" class="d-block w-100" alt="...">
-                        <div class="carousel-caption">
-                            <h2>Welcome to DynamicStore</h2>
-                            <p>Discover amazing products at great prices</p>
-                        </div>
-                    </div>
-                    <!-- Add more carousel items as needed -->
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
+<div class="container-fluid p-0 h-100">
+    <!-- Navigation Bar -->
+    <div class="top-bar">
+        <div class="container">
             <div class="row">
-                <div class="col-12 mb-4">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/400x200" class="card-img" alt="...">
-                        <div class="card-img-overlay d-flex align-items-end">
-                            <h5 class="card-title text-white">New Arrivals</h5>
-                        </div>
-                    </div>
+                <div class="col-md-6">
+                    <span class="me-3 text-white"><i class="bi bi-telephone"></i> +1 234 567 890</span>
+                    <span class="text-white"><i class="bi bi-envelope"></i> support@dynamicstore.com</span>
                 </div>
-                <div class="col-12">
-                    <div class="card">
-                        <img src="https://via.placeholder.com/400x200" class="card-img" alt="...">
-                        <div class="card-img-overlay d-flex align-items-end">
-                            <h5 class="card-title text-white">Special Offers</h5>
-                        </div>
-                    </div>
+                <div class="col-md-6 text-end">
+                    {% if user.is_authenticated %}
+                        <span class="me-3 text-white">Welcome, {{ user.username }}</span>
+                        <a href="#" class="text-decoration-none text-white me-3">My Account</a>
+                        <a href="{% url 'logout' %}" class="text-decoration-none text-white">Logout</a>
+                    {% else %}
+                        <a href="{% url 'nintendo_login' %}" class="btn btn-nintendo-account">
+                            <i class="bi bi-person-circle me-2"></i>Account
+                        </a>
+                    {% endif %}
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1 class="display-4 mb-4 text-white">Welcome to DynamicStore</h1>
+                <p class="lead mb-5 text-white">Your Gaming Entertainment Shopping Platform</p>
+                
+                <a href="{% url 'nintendo_login' %}" class="btn btn-nintendo-red btn-lg">
+                    <i class="bi bi-nintendo-switch me-2"></i>Nintendo Account
+                </a>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Featured Categories -->
-<div class="container mb-5">
-    <h2 class="mb-4">Shop by Category</h2>
-    <div class="row row-cols-2 row-cols-md-4 g-4">
-        {% for category in categories %}
-        <div class="col">
-            <div class="card h-100 border-0 shadow-sm">
-                {% if category.image %}
-                    <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
-                {% else %}
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="{{ category.name }}">
-                {% endif %}
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ category.name }}</h5>
-                    <a href="#" class="btn btn-outline-primary btn-sm">View Products</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
+<style>
+.top-bar {
+    background-color: #e70112;
+    padding: 8px 0;
+    margin: 0;
+    border-radius: 5px 5px 0 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-<!-- Featured Products -->
-<div class="container mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Featured Products</h2>
-        <a href="#" class="btn btn-outline-primary">View All</a>
-    </div>
-    <div class="row row-cols-2 row-cols-md-4 g-4">
-        {% for product in featured_products %}
-        <div class="col">
-            <div class="card h-100 border-0 shadow-sm">
-                {% if product.image %}
-                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                {% else %}
-                    <img src="https://via.placeholder.com/300" class="card-img-top" alt="{{ product.name }}">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text text-muted">{{ product.description|truncatewords:10 }}</p>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="h5 mb-0">${{ product.price }}</span>
-                        <button class="btn btn-primary btn-sm">
-                            <i class="bi bi-cart-plus"></i> Add to Cart
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
+.btn-nintendo-account {
+    background-color: white;
+    color: #e70112;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.9rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
 
-<!-- Features Section -->
-<div class="container mb-5">
-    <div class="row g-4">
-        <div class="col-md-3">
-            <div class="text-center">
-                <i class="bi bi-truck display-4 text-primary"></i>
-                <h5 class="mt-3">Free Shipping</h5>
-                <p class="text-muted">On orders over $50</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="text-center">
-                <i class="bi bi-shield-check display-4 text-primary"></i>
-                <h5 class="mt-3">Secure Payment</h5>
-                <p class="text-muted">100% secure payment</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="text-center">
-                <i class="bi bi-arrow-counterclockwise display-4 text-primary"></i>
-                <h5 class="mt-3">Easy Returns</h5>
-                <p class="text-muted">30 day return policy</p>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="text-center">
-                <i class="bi bi-headset display-4 text-primary"></i>
-                <h5 class="mt-3">24/7 Support</h5>
-                <p class="text-muted">Dedicated support</p>
-            </div>
-        </div>
-    </div>
-</div>
+.btn-nintendo-account:hover {
+    background-color: #f8f9fa;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+}
+
+.btn-nintendo-red {
+    background-color: white;
+    color: #e70112;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.btn-nintendo-red:hover {
+    transform: scale(1.05);
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+</style>
 {% endblock %} 
