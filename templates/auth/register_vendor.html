@@ -1,0 +1,549 @@
+{% extends 'base.html' %}
+
+{% block title %}Register Vendor - DynamicStore{% endblock %}
+
+{% block content %}
+<div class="vendor-register-container py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-5">
+                        <h1 class="text-center mb-4">Create Vendor Account</h1>
+                        
+                        {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        
+                        <form method="post" action="{% url 'register_vendor' %}" class="needs-validation" novalidate>
+                            {% csrf_token %}
+                            
+                            <!-- Store Information -->
+                            <div class="mb-4">
+                                <h4 class="form-section-title">Store Information</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">Store Name</label>
+                                    <input type="text" name="store_name" class="form-control" 
+                                           value="{{ form_data.store_name }}" required>
+                                    <div class="invalid-feedback">
+                                        Please enter your store name.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Store Category</label>
+                                    <select name="store_category" class="form-select" required>
+                                        <option value="">Select a category</option>
+                                        <option value="electronics">Electronics</option>
+                                        <option value="fashion">Fashion & Apparel</option>
+                                        <option value="home">Home & Living</option>
+                                        <option value="beauty">Beauty & Health</option>
+                                        <option value="sports">Sports & Outdoors</option>
+                                        <option value="books">Books & Media</option>
+                                        <option value="food">Food & Beverages</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a store category.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Store Description</label>
+                                    <textarea name="store_description" class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Store Logo</label>
+                                    <input type="file" name="store_logo" class="form-control" accept="image/*">
+                                    <div class="form-text">Recommended size: 500x500 pixels</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Store Banner</label>
+                                    <input type="file" name="store_banner" class="form-control" accept="image/*">
+                                    <div class="form-text">Recommended size: 1200x300 pixels</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Business Registration Number</label>
+                                    <input type="text" name="business_registration" class="form-control" required>
+                                    <div class="invalid-feedback">
+                                        Please enter your business registration number.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Personal Information -->
+                            <div class="mb-4">
+                                <h4 class="form-section-title">Personal Information</h4>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">First Name</label>
+                                        <input type="text" name="first_name" class="form-control" required>
+                                        <div class="invalid-feedback">
+                                            Please enter your first name.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Last Name</label>
+                                        <input type="text" name="last_name" class="form-control" required>
+                                        <div class="invalid-feedback">
+                                            Please enter your last name.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Phone Number</label>
+                                        <input type="tel" name="phone" class="form-control" required>
+                                        <div class="invalid-feedback">
+                                            Please enter your phone number.
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Position/Title</label>
+                                        <input type="text" name="position" class="form-control" required>
+                                        <div class="invalid-feedback">
+                                            Please enter your position.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Business Address</label>
+                                    <textarea name="business_address" class="form-control" rows="3" required></textarea>
+                                    <div class="invalid-feedback">
+                                        Please enter your business address.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Account Information -->
+                            <div class="mb-4">
+                                <h4 class="form-section-title">Account Information</h4>
+                                <div class="mb-3">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" name="email" class="form-control" required>
+                                    <div class="invalid-feedback">
+                                        Please enter a valid email address.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" name="username" class="form-control" required>
+                                    <div class="invalid-feedback">
+                                        Please choose a username.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Password</label>
+                                    <input type="password" name="password1" class="form-control" minlength="8" required>
+                                    <div class="invalid-feedback">
+                                        Password must be at least 8 characters.
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password" name="password2" class="form-control" minlength="8" required>
+                                    <div class="invalid-feedback">
+                                        Passwords do not match.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Terms and Privacy Notice -->
+                            <div class="terms-notice mb-4">
+                                <p class="terms-text">
+                                    By creating an account, you are agreeing to the 
+                                    <a href="#" class="vendor-link">DynamicStore Vendor Agreement</a> and 
+                                    <a href="#" class="vendor-link">Privacy Policy</a>. 
+                                    You will receive important updates and notifications regarding your vendor account via email.
+                                </p>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-vendor btn-lg">Create Vendor Account</button>
+                                <p class="text-center mt-3">
+                                    Already have an account? <a href="{% url 'login' %}" class="vendor-link">Sign in</a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.vendor-register-container {
+    background-color: #49a2daee;
+    background-image: 
+        url('/static/assets/UI/background/pattern.svg');
+    background-size: 
+        cover,
+        200px 200px;
+    background-position: center;
+    background-attachment: fixed;
+    background-blend-mode: overlay;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+.form-section-title {
+    color: #437798;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #437798;
+}
+
+.btn-vendor {
+    background-color: #437798;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn-vendor:hover {
+    background-color: #2c5066;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.vendor-link {
+    color: #437798;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.vendor-link:hover {
+    color: #2c5066;
+    text-decoration: underline;
+}
+
+.terms-notice {
+    background-color: rgba(67, 119, 152, 0.1);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+.terms-text {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+.card {
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+.form-control:focus {
+    border-color: #437798;
+    box-shadow: 0 0 0 0.2rem rgba(67, 119, 152, 0.25);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* 輸入狀態樣式 */
+.form-control.is-typing {
+    border-color: #437798;
+    box-shadow: 0 0 0 0.1rem rgba(67, 119, 152, 0.2);
+}
+
+.validation-message {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: none;
+}
+
+.validation-message.show {
+    display: block;
+}
+
+.validation-message.valid {
+    color: #198754;
+}
+
+.validation-message.invalid {
+    color: #dc3545;
+}
+
+/* 輸入指示器動畫 */
+@keyframes typing {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
+
+.typing-indicator {
+    display: none;
+    color: #437798;
+    font-size: 0.875rem;
+    animation: typing 1.5s infinite;
+}
+
+.typing-indicator.show {
+    display: inline-block;
+}
+</style>
+
+<script>
+// 表單驗證
+(function() {
+    'use strict';
+    
+    const forms = document.querySelectorAll('.needs-validation');
+    
+    // 實時表單驗證函數
+    function validateForm() {
+        const form = this.closest('form');
+        if (!form) return;
+
+        // 檢查密碼強度
+        if (this.name === 'password1') {
+            const password = this.value;
+            const hasNumber = /\d/.test(password);
+            const hasLetter = /[a-zA-Z]/.test(password);
+            const isLongEnough = password.length >= 8;
+
+            if (!isLongEnough || !hasNumber || !hasLetter) {
+                this.setCustomValidity('Password must be at least 8 characters and contain both letters and numbers');
+            } else {
+                this.setCustomValidity('');
+            }
+        }
+
+        // 檢查密碼匹配
+        if (this.name === 'password2') {
+            const password1 = form.querySelector('input[name="password1"]');
+            if (this.value !== password1.value) {
+                this.setCustomValidity('Passwords do not match');
+            } else {
+                this.setCustomValidity('');
+            }
+        }
+
+        // 驗證商店名稱
+        if (this.name === 'store_name') {
+            if (this.value.length < 3) {
+                this.setCustomValidity('Store name must be at least 3 characters long');
+            } else {
+                this.setCustomValidity('');
+            }
+        }
+
+        // 驗證電話號碼
+        if (this.name === 'phone') {
+            const phoneRegex = /^\+?[\d\s-]{8,}$/;
+            if (!phoneRegex.test(this.value)) {
+                this.setCustomValidity('Please enter a valid phone number');
+            } else {
+                this.setCustomValidity('');
+            }
+        }
+
+        // 驗證電子郵件
+        if (this.name === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(this.value)) {
+                this.setCustomValidity('Please enter a valid email address');
+            } else {
+                this.setCustomValidity('');
+            }
+        }
+
+        // 驗證用戶名
+        if (this.name === 'username') {
+            const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+            if (!usernameRegex.test(this.value)) {
+                this.setCustomValidity('Username must be 3-20 characters and can only contain letters, numbers, and underscores');
+            } else {
+                this.setCustomValidity('');
+            }
+        }
+
+        // 更新表單驗證狀態
+        this.reportValidity();
+    }
+
+    // 為所有輸入字段添加驗證監聽器
+    document.querySelectorAll('input, select, textarea').forEach(input => {
+        input.addEventListener('input', validateForm);
+        input.addEventListener('change', validateForm);
+    });
+    
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            // 檢查密碼匹配
+            const password1 = form.querySelector('input[name="password1"]');
+            const password2 = form.querySelector('input[name="password2"]');
+            
+            if (password1.value !== password2.value) {
+                password2.setCustomValidity('Passwords do not match');
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                password2.setCustomValidity('');
+            }
+            
+            form.classList.add('was-validated');
+        }, false);
+    });
+
+    // 添加輸入指示器到每個輸入字段
+    document.querySelectorAll('input, textarea').forEach(input => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'validation-wrapper';
+        
+        const indicator = document.createElement('span');
+        indicator.className = 'typing-indicator';
+        indicator.textContent = 'Typing...';
+        
+        const message = document.createElement('div');
+        message.className = 'validation-message';
+        
+        input.parentNode.insertBefore(wrapper, input.nextSibling);
+        wrapper.appendChild(indicator);
+        wrapper.appendChild(message);
+        
+        let typingTimer;
+        
+        input.addEventListener('input', () => {
+            input.classList.add('is-typing');
+            indicator.classList.add('show');
+            clearTimeout(typingTimer);
+            
+            typingTimer = setTimeout(() => {
+                input.classList.remove('is-typing');
+                indicator.classList.remove('show');
+                validateInput(input);
+            }, 500);
+        });
+    });
+    
+    // 輸入驗證函數
+    function validateInput(input) {
+        const message = input.nextSibling.querySelector('.validation-message');
+        let isValid = true;
+        let messageText = '';
+        
+        switch(input.name) {
+            case 'store_name':
+                isValid = input.value.length >= 3;
+                messageText = isValid ? 'Valid store name' : 'Store name must be at least 3 characters';
+                break;
+                
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                isValid = emailRegex.test(input.value);
+                messageText = isValid ? 'Valid email address' : 'Please enter a valid email';
+                break;
+                
+            case 'phone':
+                const phoneRegex = /^\+?[\d\s-]{8,}$/;
+                isValid = phoneRegex.test(input.value);
+                messageText = isValid ? 'Valid phone number' : 'Please enter a valid phone number';
+                break;
+                
+            case 'username':
+                const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
+                isValid = usernameRegex.test(input.value);
+                messageText = isValid ? 'Valid username' : 'Username must be 3-20 characters (letters, numbers, underscore)';
+                break;
+                
+            case 'password1':
+                const hasNumber = /\d/.test(input.value);
+                const hasLetter = /[a-zA-Z]/.test(input.value);
+                const isLongEnough = input.value.length >= 8;
+                isValid = hasNumber && hasLetter && isLongEnough;
+                messageText = isValid ? 'Password meets requirements' : 'Password must be 8+ chars with letters and numbers';
+                break;
+                
+            case 'password2':
+                const password1 = document.querySelector('input[name="password1"]');
+                isValid = input.value === password1.value;
+                messageText = isValid ? 'Passwords match' : 'Passwords do not match';
+                break;
+        }
+        
+        if (input.value) {
+            message.textContent = messageText;
+            message.classList.remove('valid', 'invalid');
+            message.classList.add(isValid ? 'valid' : 'invalid');
+            message.classList.add('show');
+        } else {
+            message.classList.remove('show');
+        }
+        
+        return isValid;
+    }
+})();
+
+// 添加密碼強度指示器
+const password1Input = document.querySelector('input[name="password1"]');
+const strengthIndicator = document.createElement('div');
+strengthIndicator.className = 'password-strength mt-1';
+password1Input.parentNode.insertBefore(strengthIndicator, password1Input.nextSibling);
+
+password1Input.addEventListener('input', function() {
+    const password = this.value;
+    let strength = 0;
+    let message = '';
+
+    // 檢查密碼強度
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+    // 設置強度消息和顏色
+    switch(strength) {
+        case 0:
+        case 1:
+            message = '<span class="text-danger">Weak</span>';
+            break;
+        case 2:
+        case 3:
+            message = '<span class="text-warning">Medium</span>';
+            break;
+        case 4:
+        case 5:
+            message = '<span class="text-success">Strong</span>';
+            break;
+    }
+
+    strengthIndicator.innerHTML = `Password strength: ${message}`;
+});
+</script>
+{% endblock %} 

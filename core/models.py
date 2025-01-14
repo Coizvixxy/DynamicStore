@@ -46,7 +46,14 @@ class Vendor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     store_name = models.CharField(max_length=100)
+    store_category = models.CharField(max_length=50, blank=True, null=True)
     store_description = models.TextField(blank=True)
+    store_logo = models.ImageField(upload_to='store_logos/', null=True, blank=True)
+    store_banner = models.ImageField(upload_to='store_banners/', null=True, blank=True)
+    business_registration = models.CharField(max_length=50, blank=True, null=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    position = models.CharField(max_length=50, blank=True, null=True)
+    business_address = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -57,18 +64,12 @@ class Vendor(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        if instance.is_staff:
-            Vendor.objects.create(user=instance)
-        else:
+        if not instance.is_staff:
             Customer.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
-    if instance.is_staff:
-        if not hasattr(instance, 'vendor'):
-            Vendor.objects.create(user=instance)
-        instance.vendor.save()
-    else:
+    if not instance.is_staff:
         if not hasattr(instance, 'customer'):
             Customer.objects.create(user=instance)
         instance.customer.save()

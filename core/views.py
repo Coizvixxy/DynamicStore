@@ -3,7 +3,7 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from .models import Category, Product
+from .models import Category, Product, Vendor, Customer
 from .plugins import plugin_manager
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -285,41 +285,73 @@ def register_vendor(request):
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         store_name = request.POST.get('store_name')
+        store_category = request.POST.get('store_category')
         store_description = request.POST.get('store_description')
+        business_registration = request.POST.get('business_registration')
+        phone = request.POST.get('phone')
+        position = request.POST.get('position')
+        business_address = request.POST.get('business_address')
         
         # 驗證密碼
         if password1 != password2:
             messages.error(request, 'Passwords do not match.')
             return render(request, 'auth/register_vendor.html')
-        
-        # 檢查用戶名和郵箱是否已存在
+            
+        # 檢查用戶名是否已存在
         if User.objects.filter(username=username).exists():
             messages.error(request, 'Username already exists.')
-            return render(request, 'auth/register_vendor.html')
+            return render(request, 'auth/register_vendor.html', {
+                'form_data': request.POST  # 保存表單數據
+            })
         
+        # 檢查郵箱是否已存在
         if User.objects.filter(email=email).exists():
             messages.error(request, 'Email already registered.')
-            return render(request, 'auth/register_vendor.html')
-        
-        # 創建用戶
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password1,
-            first_name=first_name,
-            last_name=last_name,
-            is_staff=True  # 給予商家後台訪問權限
-        )
-        
-        # 創建商家檔案
-        vendor = Vendor.objects.create(
-            user=user,
-            store_name=store_name,
-            store_description=store_description
-        )
-        
-        login(request, user)
-        messages.success(request, 'Vendor registration successful!')
-        return redirect('home')
+            return render(request, 'auth/register_vendor.html', {
+                'form_data': request.POST  # 保存表單數據
+            })
+            
+        try:
+            # 創建用戶
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password1,
+                first_name=first_name,
+                last_name=last_name,
+                is_staff=True
+            )
+            
+            # 創建商家檔案
+            vendor = Vendor.objects.create(
+                user=user,
+                store_name=store_name,
+                store_category=store_category,
+                store_description=store_description,
+                business_registration=business_registration,
+                phone=phone,
+                position=position,
+                business_address=business_address
+            )
+            
+            # 處理上傳的圖片
+            if 'store_logo' in request.FILES:
+                vendor.store_logo = request.FILES['store_logo']
+            if 'store_banner' in request.FILES:
+                vendor.store_banner = request.FILES['store_banner']
+            vendor.save()
+            
+            login(request, user)
+            messages.success(request, 'Vendor registration successful!')
+            return redirect('home')
+            
+        except Exception as e:
+            # 如果創建過程中出現錯誤，刪除已創建的用戶
+            if 'user' in locals():
+                user.delete()
+            messages.error(request, f'An error occurred: {str(e)}')
+            return render(request, 'auth/register_vendor.html', {
+                'form_data': request.POST  # 保存表單數據
+            })
     
     return render(request, 'auth/register_vendor.html')
