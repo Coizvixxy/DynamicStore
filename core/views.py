@@ -124,17 +124,29 @@ def plugin_management(request):
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
         
-        if user is not None:
-            login(request, user)
-            messages.success(request, 'Successfully logged in!')
-            return redirect('home')
-        else:
-            messages.error(request, 'Invalid username or password.')
-    
+        try:
+            # 通過 email 查找用戶
+            user = User.objects.get(email=email)
+            # 使用用戶名（email）和密碼進行驗證
+            user = authenticate(request, username=email, password=password)
+            
+            if user is not None:
+                login(request, user)
+                messages.success(request, f'Welcome back, {user.first_name}!')
+                
+                # 根據用戶類型重定向
+                if user.is_staff:
+                    return redirect('product_management')
+                else:
+                    return redirect('home')
+            else:
+                messages.error(request, 'Invalid password.')
+        except User.DoesNotExist:
+            messages.error(request, 'No account found with this email.')
+        
     return render(request, 'auth/login.html')
 
 def register_view(request):
@@ -175,52 +187,91 @@ def register_customer(request):
     current_year = datetime.now().year
     year_range = range(current_year, current_year - 100, -1)
     
+    # 保存表單數據以便在驗證失敗時重新填充
+    form_data = {
+        'nickname': request.POST.get('nickname', ''),
+        'email': request.POST.get('email', ''),
+        'birth_year': request.POST.get('birth_year', ''),
+        'birth_month': request.POST.get('birth_month', ''),
+        'birth_day': request.POST.get('birth_day', ''),
+        'gender': request.POST.get('gender', ''),
+        'country': request.POST.get('country', '')
+    }
+    
     context = {
-        'year_range': year_range
+        'year_range': year_range,
+        'form_data': form_data  # 添加表單數據到上下文
     }
     
     if request.method == 'POST':
-        # 獲取表單數據
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        email = request.POST.get('email')
-        username = request.POST.get('username')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
-        shipping_address = request.POST.get('shipping_address')
         
-        # 驗證密碼
+        # 驗證必填字段
+        required_fields = ['nickname', 'email', 'birth_year', 'birth_month', 'birth_day']
+        missing_fields = [field for field in required_fields if not form_data[field]]
+        if missing_fields:
+            messages.error(request, 'Please fill in all required fields.')
+            return render(request, 'auth/register_customer.html', context)
+        
+        # 密碼驗證
         if password1 != password2:
             messages.error(request, 'Passwords do not match.')
             return render(request, 'auth/register_customer.html', context)
         
-        # 檢查用戶名和郵箱是否已存在
-        if User.objects.filter(username=username).exists():
-            messages.error(request, 'Username already exists.')
+        if len(password1) < 8:
+            messages.error(request, 'Password must be at least 8 characters long.')
             return render(request, 'auth/register_customer.html', context)
         
-        if User.objects.filter(email=email).exists():
+        # 檢查密碼強度
+        if not any(char.isdigit() for char in password1):
+            messages.error(request, 'Password must contain at least one number.')
+            return render(request, 'auth/register_customer.html', context)
+            
+        if not any(char.isalpha() for char in password1):
+            messages.error(request, 'Password must contain at least one letter.')
+            return render(request, 'auth/register_customer.html', context)
+        
+        # 檢查郵箱
+        if User.objects.filter(email=form_data['email']).exists():
             messages.error(request, 'Email already registered.')
             return render(request, 'auth/register_customer.html', context)
         
-        # 創建用戶
-        user = User.objects.create_user(
-            username=username,
-            email=email,
-            password=password1,
-            first_name=first_name,
-            last_name=last_name
-        )
-        
-        # 創建客戶檔案
-        customer = Customer.objects.create(
-            user=user,
-            shipping_address=shipping_address
-        )
-        
-        login(request, user)
-        messages.success(request, 'Registration successful!')
-        return redirect('home')
+        try:
+            # 創建用戶
+            user = User.objects.create_user(
+                username=form_data['email'],
+                email=form_data['email'],
+                password=password1,
+                first_name=form_data['nickname']
+            )
+            
+            # 設置生日
+            try:
+                birth_date = datetime(
+                    int(form_data['birth_year']), 
+                    int(form_data['birth_month']), 
+                    int(form_data['birth_day'])
+                ).date()
+                user.customer.birth_date = birth_date
+            except ValueError:
+                messages.error(request, 'Invalid birth date.')
+                user.delete()
+                return render(request, 'auth/register_customer.html', context)
+            
+            # 更新其他信息
+            user.customer.gender = form_data['gender']
+            user.customer.country = form_data['country']
+            user.customer.save()
+            
+            # 自動登入
+            login(request, user)
+            messages.success(request, f'Welcome, {form_data["nickname"]}! Your account has been created successfully.')
+            return redirect('home')
+            
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+            return render(request, 'auth/register_customer.html', context)
     
     return render(request, 'auth/register_customer.html', context)
 

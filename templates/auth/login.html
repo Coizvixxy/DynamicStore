@@ -22,21 +22,23 @@
                     <form method="post" action="{% url 'login' %}">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label class="form-label">Username</label>
-                            <input type="text" name="username" class="form-control" required>
+                            <label class="form-label">Email Address</label>
+                            <input type="email" name="email" class="form-control" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Password</label>
                             <input type="password" name="password" class="form-control" required>
+                            <div class="invalid-feedback">
+                                Please enter your password.
+                            </div>
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" name="remember" id="remember">
                             <label class="form-check-label" for="remember">Remember me</label>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+                        <button type="submit" class="btn btn-nintendo-red w-100 mb-3">Login</button>
                         <div class="text-center">
-                            <a href="{% url 'password_reset' %}" class="text-decoration-none">Forgot password?</a>
-                            <p class="mt-3 mb-0">Don't have an account? <a href="{% url 'register' %}" class="text-decoration-none">Register</a></p>
+                            <p class="mt-3 mb-0">Don't have an account? <a href="{% url 'register_customer' %}" class="nintendo-link">Create Account</a></p>
                         </div>
                     </form>
                 </div>
@@ -44,4 +46,43 @@
         </div>
     </div>
 </div>
+
+<style>
+.nintendo-link {
+    color: #0b6bc6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nintendo-link:hover {
+    text-decoration: underline;
+    color: #085494;
+}
+
+.btn-nintendo-red {
+    background-color: #e60012;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn-nintendo-red:hover {
+    background-color: #b3000e;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.form-control:focus {
+    border-color: #0b6bc6;
+    box-shadow: 0 0 0 0.2rem rgba(11, 107, 198, 0.25);
+}
+</style>
 {% endblock %} 
