@@ -63,12 +63,13 @@ class Vendor(models.Model):
 # 信號接收器，在創建用戶時自動創建相應的檔案
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    if created:
-        if not instance.is_staff:
-            Customer.objects.create(user=instance)
+    """只為非商家用戶創建客戶檔案"""
+    if created and not instance.is_staff:
+        Customer.objects.create(user=instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
+    """保存用戶檔案"""
     if not instance.is_staff:
         if not hasattr(instance, 'customer'):
             Customer.objects.create(user=instance)

@@ -135,13 +135,14 @@ def login_view(request):
             
             if user is not None:
                 login(request, user)
-                messages.success(request, f'Welcome back, {user.first_name}!')
                 
-                # 根據用戶類型重定向
-                if user.is_staff:
-                    return redirect('product_management')
+                # 檢查用戶類型並重定向
+                if hasattr(user, 'vendor'):
+                    messages.success(request, f'Welcome back, {user.vendor.store_name}!')
+                    return redirect('product_management')  # 或 vendor_dashboard
                 else:
-                    return redirect('home')
+                    messages.success(request, f'Welcome back, {user.first_name}!')
+                    return redirect('home')  # 或 customer_dashboard
             else:
                 messages.error(request, 'Invalid password.')
         except User.DoesNotExist:
@@ -281,7 +282,6 @@ def register_vendor(request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
-        username = request.POST.get('username')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
         store_name = request.POST.get('store_name')
@@ -298,7 +298,7 @@ def register_vendor(request):
             return render(request, 'auth/register_vendor.html')
             
         # 檢查用戶名是否已存在
-        if User.objects.filter(username=username).exists():
+        if User.objects.filter(username=email).exists():
             messages.error(request, 'Username already exists.')
             return render(request, 'auth/register_vendor.html', {
                 'form_data': request.POST  # 保存表單數據
@@ -314,7 +314,7 @@ def register_vendor(request):
         try:
             # 創建用戶
             user = User.objects.create_user(
-                username=username,
+                username=email,
                 email=email,
                 password=password1,
                 first_name=first_name,
