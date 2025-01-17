@@ -7,10 +7,13 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card shadow-sm border-0">
+                <div class="nintendo-login-box">
                     <div class="card-body p-5">
                         <h1 class="text-center mb-4">Create Vendor Account</h1>
-                        
+                        <p class="RegisterForm_signup_desc mb-4">
+                            Please enter your information below to create your Vendor Account.
+                        </p>
+
                         {% if messages %}
                         {% for message in messages %}
                         <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
@@ -24,8 +27,10 @@
                             {% csrf_token %}
                             
                             <!-- Store Information -->
-                            <div class="mb-4">
-                                <h4 class="form-section-title">Store Information</h4>
+                            <div class="RegisterForm_signup_group c-formGroup mb-4">
+                                <div class="RegisterForm_signup_label">
+                                    <h4>Store Information</h4>
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">Store Name</label>
                                     <input type="text" name="store_name" class="form-control" 
@@ -163,7 +168,7 @@
 
                             <!-- Submit Button -->
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-vendor btn-lg">Create Vendor Account</button>
+                                <button type="submit" class="btn btn-vendor btn-lg" id="submit-btn" disabled>Create Account</button>
                                 <p class="text-center mt-3">
                                     Already have an account? <a href="{% url 'login' %}" class="vendor-link">Sign in</a>
                                 </p>
@@ -194,29 +199,70 @@
     min-height: 100vh;
 }
 
-.form-section-title {
-    color: #437798;
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #437798;
+.nintendo-login-box {
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 3rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.RegisterForm_signup_desc {
+    color: #666;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.RegisterForm_signup_group {
+    margin-bottom: 1.5rem;
+}
+
+.RegisterForm_signup_label {
+    margin-bottom: 0.5rem;
 }
 
 .btn-vendor {
     background-color: #437798;
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-    border-radius: 4px;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
     transition: all 0.3s ease;
+    width: 100%;
 }
 
 .btn-vendor:hover {
     background-color: #2c5066;
     color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.c-formNote {
+    font-size: 0.875rem;
+    color: #666;
+}
+
+/* 錯誤狀態樣式 */
+.is-invalid {
+    border-color: #dc3545 !important;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+
+/* 禁用狀態的按鈕樣式 */
+.btn-vendor:disabled {
+    background-color: #e6e6e6;
+    cursor: not-allowed;
+}
+
+.form-section-title {
+    color: #437798;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #437798;
 }
 
 .vendor-link {
@@ -317,85 +363,52 @@
 (function() {
     'use strict';
     
-    const forms = document.querySelectorAll('.needs-validation');
-    
-    // 實時表單驗證函數
+    // 驗證表單函數
     function validateForm() {
-        const form = this.closest('form');
-        if (!form) return;
-
-        // 檢查密碼強度
-        if (this.name === 'password1') {
-            const password = this.value;
-            const hasNumber = /\d/.test(password);
-            const hasLetter = /[a-zA-Z]/.test(password);
-            const isLongEnough = password.length >= 8;
-
-            if (!isLongEnough || !hasNumber || !hasLetter) {
-                this.setCustomValidity('Password must be at least 8 characters and contain both letters and numbers');
-            } else {
-                this.setCustomValidity('');
+        const form = document.querySelector('form');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        // 檢查所有必填字段
+        const requiredFields = [
+            'store_name',
+            'store_category',
+            'email',
+            'first_name',
+            'last_name',
+            'phone',
+            'position',
+            'password1',
+            'password2'
+        ];
+        
+        let isValid = true;
+        
+        // 檢查每個必填字段
+        requiredFields.forEach(field => {
+            const input = form.querySelector(`[name="${field}"]`);
+            if (!input.value.trim()) {
+                isValid = false;
             }
-        }
-
+        });
+        
         // 檢查密碼匹配
-        if (this.name === 'password2') {
-            const password1 = form.querySelector('input[name="password1"]');
-            if (this.value !== password1.value) {
-                this.setCustomValidity('Passwords do not match');
-            } else {
-                this.setCustomValidity('');
-            }
+        const password1 = form.querySelector('[name="password1"]');
+        const password2 = form.querySelector('[name="password2"]');
+        if (password1.value !== password2.value) {
+            isValid = false;
         }
-
-        // 驗證商店名稱
-        if (this.name === 'store_name') {
-            if (this.value.length < 3) {
-                this.setCustomValidity('Store name must be at least 3 characters long');
-            } else {
-                this.setCustomValidity('');
-            }
-        }
-
-        // 驗證電話號碼
-        if (this.name === 'phone') {
-            const phoneRegex = /^\+?[\d\s-]{8,}$/;
-            if (!phoneRegex.test(this.value)) {
-                this.setCustomValidity('Please enter a valid phone number');
-            } else {
-                this.setCustomValidity('');
-            }
-        }
-
-        // 驗證電子郵件
-        if (this.name === 'email') {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(this.value)) {
-                this.setCustomValidity('Please enter a valid email address');
-            } else {
-                this.setCustomValidity('');
-            }
-        }
-
-        // 驗證用戶名
-        if (this.name === 'username') {
-            const usernameRegex = /^[a-zA-Z0-9_]{3,20}$/;
-            if (!usernameRegex.test(this.value)) {
-                this.setCustomValidity('Username must be 3-20 characters and can only contain letters, numbers, and underscores');
-            } else {
-                this.setCustomValidity('');
-            }
-        }
-
-        // 更新表單驗證狀態
-        this.reportValidity();
+        
+        // 啟用/禁用提交按鈕
+        submitBtn.disabled = !isValid;
     }
-
+    
     // 為所有輸入字段添加驗證監聽器
     document.querySelectorAll('input, select, textarea').forEach(input => {
         input.addEventListener('input', validateForm);
         input.addEventListener('change', validateForm);
     });
+
+    const forms = document.querySelectorAll('.needs-validation');
     
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
